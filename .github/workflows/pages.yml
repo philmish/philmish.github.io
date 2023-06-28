@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: write
     concurrency:
-      groups: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}
     steps:
       - uses: actions/checkout@v2
         with:
