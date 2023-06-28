@@ -1,6 +1,6 @@
 baseURL = "https://philmish.github.io/"
 languageCode = "en-us"
-title = "My New Hugo Site"
+title = "Philmish's Blog"
 
 [author]
 name = "philmish"
