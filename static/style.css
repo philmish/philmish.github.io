@@ -44,13 +44,16 @@ nav {
 
 input:checked ~ #nav-menu-content {
     max-height: 100%;
-    /*box-shadow: 1px 2px 3px rgba(0,0,0,0.2);*/
 }
 
 #nav-menu-content a {
     display: block;
     padding: 10px;
     text-decoration: none;
+}
+
+#nav-menu-content a:visited {
+    color: #CCCCCC
 }
 
 #title-container {
@@ -60,7 +63,7 @@ input:checked ~ #nav-menu-content {
     grid-row-end: 2;
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: center;
     color: #CCCCCC;
     border-block-end: 2px solid black;
 }
@@ -156,7 +159,7 @@ article {
     overflow-wrap: break-word;
     word-wrap: break-word;
     word-break: break-word;
-    width: 100%;
+    width: 95%;
 }
 
 article h2 {
