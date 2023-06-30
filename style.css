@@ -6,7 +6,7 @@ html {
     display: grid;
     grid-row-gap: 2px;
     grid-template-columns: 10% [col-start] 70% [col-start] 20% [col-start];
-    grid-template-rows: [row1-start] 10% [row1-end row2-start] 90% [row2-end];
+    grid-template-rows: [row1-start] 90px [row1-end row2-start] 90% [row2-end];
 }
 
 nav {
@@ -40,6 +40,7 @@ nav {
 
 #nav-menu-content ul li a:link {
     text-decoration: none;
+    font-size: 1.3em;
 }
 
 input:checked ~ #nav-menu-content {
@@ -56,6 +57,14 @@ input:checked ~ #nav-menu-content {
     color: #CCCCCC
 }
 
+#nav-menu-content a:link {
+    color: #CCCCCC
+}
+
+#nav-menu-content a:active {
+    color: #CCCCCC
+}
+
 #title-container {
     grid-column-start: 2;
     grid-column-end: 3;
@@ -65,11 +74,11 @@ input:checked ~ #nav-menu-content {
     align-items: center;
     justify-content: center;
     color: #CCCCCC;
-    border-block-end: 2px solid black;
+    border-block-end: .5px solid black;
 }
 
 #title-container h1 {
-    margin-left: 36px
+    margin-left: 36px;
 }
 
 #nav-right-hand {
@@ -84,6 +93,8 @@ input:checked ~ #nav-menu-content {
 #avatar-img {
     max-width: 75px;
     max-height: 75px;
+    min-width: 75px;
+    min-height: 75px;
     border-radius: 50%;
     border: solid 1px black;
 }
@@ -160,6 +171,10 @@ article {
     word-wrap: break-word;
     word-break: break-word;
     width: 95%;
+}
+
+article p {
+    font-size: 1.1em;
 }
 
 article h2 {
