@@ -1,6 +1,7 @@
 baseURL = "https://philmish.github.io/"
 languageCode = "en-us"
 title = "Philmish's Blog"
+sectionPagesMenu = "burgermenu"
 
 [author]
 name = "philmish"
