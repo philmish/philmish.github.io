@@ -159,6 +159,7 @@ input#hamburger {display:none;}
 
 article {
     display: flex;
+    max-width: 800px;
     justify-content: start;
     margin-left: 12px;
     align-items: center;

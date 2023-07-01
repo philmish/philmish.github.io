@@ -8,7 +8,9 @@
         </label>
         <div id="nav-menu-content">
             <ul>
-                <li><a href="/">Home</a></li>
+                {{ if ne .IsHome true }}
+                    <li><a href="/">Home</a></li>
+                {{ end }}
                 {{ range .Site.Menus.burgermenu }}
                     <li><a href="{{ .URL }}">{{ .Name }}</a></li>
                 {{ end }}
