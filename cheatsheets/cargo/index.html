@@ -1,0 +1,17 @@
+<!doctype html><html lang=en><head><title>Philmish's Blog</title><link rel=cannonical href=https://philmish.github.io/><link rel=stylesheet href=/style.css><link rel=stylesheet href=/css/prism.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Oswald"><meta name=description content="Cargo is a package manager for Rust. It comes with most Rust installations. It manages downloading packages and dependecies, compiles your packages and can be used to upload it to package registries.
+Basics To create a new package and create the related directory use:
+cargo new directory_name To build your binary inside your package&rsquo;s /target/debug/<package_name> directory run:
+cargo build If you want to build your binary with optimizations for release run:"><meta name=viewport content="width=device-width,initial-scale=1"><meta charset=utf-8></head><body><main><div id=content-grid><nav role=navigation><div class=row id=burger-menu><input type=checkbox id=hamburger>
+<label for=hamburger class=hamburger><span class=line></span>
+<span class=line></span>
+<span class=line></span></label><div id=nav-menu-content><ul><li><a href=/>Home</a></li><li><a href=/cheatsheets/>Cheatsheets</a></li><li><a href=/learning/>Learning</a></li><li><a href=/projects/>Projects</a></li></ul></div></div></nav><div id=title-container><h1 id=page-title>Cargo</h1></div><div id=nav-right-hand><img src="https://avatars.githubusercontent.com/u/92064198?v=4" id=avatar-img alt=avatar></div><div class=article-container><article><p>Cargo is a package manager for Rust. It comes with most Rust installations.
+It manages downloading packages and dependecies, compiles your packages and can be used to upload it to package registries.</p><h2 id=basics>Basics</h2><p>To create a new package and create the related directory use:</p><pre class="command-line show-language language-bash" data-user=root data-host=localhost>
+<code>cargo new directory_name</code>
+</pre><p>To build your binary inside your package&rsquo;s /target/debug/&lt;package_name> directory run:</p><pre class="command-line show-language language-bash" data-user=root data-host=localhost>
+<code>cargo build</code>
+</pre><p>If you want to build your binary with optimizations for release run:</p><pre class="command-line show-language language-bash" data-user=root data-host=localhost>
+<code>cargo build --release</code>
+</pre><p>To compile and run your binary use:</p><pre class="command-line show-language language-bash" data-user=root data-host=localhost>
+<code>cargo run</code>
+</pre></div></main><script src=/js/prism.js></script>
+<script src=https://unpkg.com/htmx.org@1.9.2 integrity=sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h crossorigin=anonymous></script></body></html></div>
