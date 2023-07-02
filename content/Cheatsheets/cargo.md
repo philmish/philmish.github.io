@@ -14,6 +14,19 @@ To create a new package and create the related directory use:
 {{% command %}}cargo new directory_name{{% /command %}}
 
 
+To build your binary inside your package's /target/debug/<package_name> directory run:
+{{% command %}}cargo build{{% /command %}}
+
+If you want to build your binary with optimizations for release run:
+{{% command %}}cargo build --release{{% /command %}}
+
+
+To compile and run your binary use:
+{{% command %}}cargo run{{% /command %}}
+
+
+
+
 
 
 
