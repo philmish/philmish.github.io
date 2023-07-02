@@ -176,6 +176,6 @@ article p {
     font-size: 1.1em;
 }
 
-article h2 {
-    margin-left: auto;
+.command code::before {
+    content: "$ ";
 }
