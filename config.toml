@@ -24,4 +24,13 @@ link = "https://philmish.github.io/"
     [markup.goldmark]
         [markup.goldmark.renderer]
             unsafe = true
-
+[menu]
+[[menu.burgermenu]]
+    name = "Cheatsheets"
+    url = "/cheatsheets"
+[[menu.burgermenu]]
+    name = "Learning"
+    url = "/learning"
+[[menu.burgermenu]]
+    name = "Projects"
+    url = "/projects"

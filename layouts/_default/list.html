@@ -2,6 +2,9 @@
 {{ partial "navbar.html" . }}
 <div class="article-container">
     <article>
+        {{ if not .IsHome}}
+            {{ partial "pagelist.html" .}}
+        {{ end }}
         {{ .Content }}
         {{ partial "footer.html" . }}
 </div>
