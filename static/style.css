@@ -181,3 +181,35 @@ article p {
 article h2 {
     font-family: "Oswald";
 }
+
+.pagelist-item {
+    min-width: 350px;
+    width: 600px;
+    min-height: 85px;
+    max-height: 150px;
+    border: solid black .25px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.pagelist-item a {
+    font-size: xx-large;
+    font-family: "Oswald";
+    text-decoration: none;
+}
+
+.pagelist-item li {
+    list-style: none;
+}
+
+.taglist li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid black .15px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin: 2px
+}

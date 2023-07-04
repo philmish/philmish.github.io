@@ -1,12 +1,14 @@
 <ul>
     {{ range .Pages }}
             <li>
-                <a href="{{ .Permalink }}">{{ .Title }}</a>
-                <ul>
-                    {{ range (.GetTerms "tags")}}
-                    <li>{{ .LinkTitle }}</li> 
-                    {{ end }}
-                </ul>
+                <div class="pagelist-item">
+                    <a href="{{ .Permalink }}">{{ .Title }}</a>
+                    <ul class="taglist">
+                        {{ range (.GetTerms "tags")}}
+                        <li>{{ .LinkTitle }}</li> 
+                        {{ end }}
+                    </ul>
+                </div>
             </li>
     {{ end }}
 </ul> 

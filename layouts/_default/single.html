@@ -1,8 +1,8 @@
-{{ partial "header.html" . }}
-{{ partial "navbar.html" . }}
+{{ define "main"}}
 <div class="article-container">
     <article>
         {{ partial "pagelist.html" . }}
         {{ .Content }}
         {{ partial "footer.html" . }}
 </div>
+{{ end }}
