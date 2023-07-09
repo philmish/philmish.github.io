@@ -181,3 +181,93 @@ article p {
 article h2 {
     font-family: "Oswald";
 }
+
+.pagelist {
+    list-style: none;
+    display: flex;
+}
+
+.pagelist-item {
+    min-width: 350px;
+    width: 600px;
+    min-height: 85px;
+    max-height: 150px;
+    border: solid #CCCCCC .25px;
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.page-list-item-head {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 22px;
+}
+
+.pagelist-item a {
+    font-size: xx-large;
+    font-family: "Oswald";
+    text-decoration: none;
+    margin-left: 16px;
+}
+
+.pagelist-item li {
+    list-style: none;
+}
+
+.taglist {
+    display: flex;
+    justify-content: start;
+}
+
+.taglist li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid #CCCCCC .15px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin: 4px;
+}
+
+.tag-list-item {
+    margin: 4px;
+}
+
+.page-list-link {
+    text-decoration: none;
+}
+
+.page-list-link:visited {
+    color: #CCCCCC
+}
+
+.page-list-link:link {
+    color: #CCCCCC
+}
+
+.page-list-link:active {
+    color: #CCCCCC
+}
+
+.tag-list {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+.newest-posts a:link {
+    text-decoration: none;
+    color: #CCCCCC;
+}
+
+.newest-posts a:visited {
+    color: #CCCCCC;
+}
