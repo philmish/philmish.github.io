@@ -1,14 +1,19 @@
-<ul>
+<div class="pagelist">
     {{ range .Pages }}
             <li>
-                <div class="pagelist-item">
-                    <a href="{{ .Permalink }}">{{ .Title }}</a>
-                    <ul class="taglist">
-                        {{ range (.GetTerms "tags")}}
-                        <li>{{ .LinkTitle }}</li> 
-                        {{ end }}
-                    </ul>
+                <div class="pagelist-item" onclick="location.href = '{{ .Permalink }}';">
+                    <div class="page-list-item-head">
+                        <a class="page-list-link" href="{{ .Permalink }}">{{ .Title }}</a>
+                    </div>
+                    <figure class="tag-list">
+                        <figcaption>Tags:</figcaption>
+                        <ul class="taglist">
+                            {{ range (.GetTerms "tags")}}
+                            <li><div class="tag-list-item">{{ .LinkTitle }}</div></li> 
+                            {{ end }}
+                        </ul>
+                    </figure>
                 </div>
             </li>
     {{ end }}
-</ul> 
+</div> 
