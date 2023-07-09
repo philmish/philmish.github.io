@@ -262,3 +262,12 @@ article h2 {
     grid-row-start: 2;
     grid-row-end: 3;
 }
+
+.newest-posts a:link {
+    text-decoration: none;
+    color: #CCCCCC;
+}
+
+.newest-posts a:visited {
+    color: #CCCCCC;
+}
