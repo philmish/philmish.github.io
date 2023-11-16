@@ -27,3 +27,362 @@ For the first Lab we will not require a lot of tools. I decided for the followin
 6. What network-based indicators could be used to find this malware on infected machines ?
 7. What would you guess is the purpose of these files ?
 
+## Hashes
+
+We use `Detect it easy` to collect basic information about the files. The first are hashes, which can be used for further reaseach.
+
+### Executable
+
+- MD5 `bb7425b82141a1c0f7d60e5106676bb1`
+- SHA1 `9dce39ac1bd36d877fdb0025ee88fdaff0627cdb`
+- SHA256 `58898bd42c5bd3bf9b1389f0eee5b39cd59180e8370eb9ea838a0b327bd6fe47`
+
+### DLL
+
+- MD5 `290934c61de9176ad682ffdd65f0a669`
+- SHA1 `a4b35de71ca20fe776dc72d12fb2886736f43c22`
+- SHA256 `f50e42c8dfaab649bde0398867e930b86c2a599e8db83b8260393082268f2dba`
+
+## Virustotal
+
+To avoid uploading irrelevant files to virustotal I used the hashes to search for the files.
+
+### Executable
+
+- [Report](https://www.virustotal.com/gui/file/58898bd42c5bd3bf9b1389f0eee5b39cd59180e8370eb9ea838a0b327bd6fe47)
+- 55/72 Vendors detect the file as malicious
+- Imports:
+	- Kernel32.dll
+	- MSVCRT.dll (entrypoint)
+- Sections:
+	- .text
+	- .rdata
+	- .data
+- the sample gets mostly detected as a Win32 Trojan/Agent
+- Malwarebytes flags the sample as a `Systemkiller`
+- the sample contacted the following IPs according to VT:
+```
+104.86.182.43
+104.97.41.163
+104.99.238.82
+13.107.39.203
+13.107.4.50
+131.253.33.203
+168.62.242.76
+178.79.208.1
+185.125.188.58
+185.125.190.44
+```
+
+### DLL
+
+- the sample dll is detected by 45/71 vendors as malicious
+- Imports:
+	- Kernel32.dll
+	- MSVCRT.dll (entrypoint)
+	- WS2_32.dll (network)
+- sections:
+	- .text
+	- .rdata
+	- .data
+	- .reloc
+- also mostly recognized as a trojan
+
+## Malware Bazaar
+
+Another good source for information on malware is [Malware Bazaar](https://bazaar.abuse.ch/browse/). It also gives access to an enormous collection of malware samples.
+
+### Executable
+
+- [Report](https://bazaar.abuse.ch/sample/58898bd42c5bd3bf9b1389f0eee5b39cd59180e8370eb9ea838a0b327bd6fe47/)
+- malware bazaar gives file information which claim the file was delivered via Malspam
+
+![Malspam](images/prac_mal_ana_ch1_l1_malbazaar.png "Figure 1. Malwar Bazaar File information")
+
+### DLL 
+
+- there was no information for the dll hashes on malware bazaar
+
+## Unpac Me
+
+Event though `Detect it easy` tells us the files are not packed, if they were we could use [unpac me](https://www.unpac.me/) to check if there are unpacked second stages for files with the same hashes as our executable or dll.
+
+- [Report](https://www.unpac.me/results/a362362b-78b6-43fd-ab26-b33dc5b8ad76/)
+- as we see there is nothing to unpack
+
+![unpacme](images/prac_mal_ana_ch1_l1_unpacme.png "Figure 2. Unpac me file information")
+
+## Strings
+
+### Executable
+
+
+| String      | Offset      |
+| ----------- | ----------- |
+| CloseHandle            | 0x2126      |
+| CreateFileA   | 0x217c        |
+| CopyFileA   | 0x21b8        |
+| FindFirstFileA   | 0x21a6        |
+| FindNextFileA   | 0x2196        |
+| KERNEL32.dll   | 0x21c2        |
+| malloc   | 0x21d2        |
+| MSVCRT.dll   | 0x21e2        |
+| kerne132.dll   | 0x3010        |
+| kernel32.dll   | 0x3020        |
+| C:\\windows\\system32\\kerne132.dll   | 0x304c        |
+| Kernel32.   | 0x3070        |
+| Lab01-01.dll   | 0x307c        |
+| C:\\Windows\\System32\\Kernel32.dll   | 0x308c        |
+| WARNING_THIS_WILL_DESTROY_YOUR_MACHINE   | 0x30b0        |
+
+
+- we can see that the imported dlls we saw in the virustotal report show up in the extracted strings as well
+- we also see that the sample contains strings which reference functions for File Creation with `CreateFileA`, File Copying with `CopyFileA` as well as looking through a list of files with `FindFirstFileA` and `FindNextFileA`
+- we can also see a string referencing a dll contained in the same directory as the lab executable `Lab01-01.dll`
+- the name `kern132.dll` seems curious as it seems like a try at hiding the name by being so similiar to `kernel32.dll`
+- shortly after that we see a reference to the path `C:\windows\system32\kerne132.dll`
+- this looks oddly similiar to the actual path to `kernel32.dll` mentioned later `C:\Windows\System32\Kernel32.dll`
+- as this sample seems to able to write and copy files we might assume that this sample injects the mention `Lab01-01.dll` under the fake `kernel32.dll` path we saw
+- the last extracted string `WARNING_THIS_WILL_DESTROY_YOUR_MACHINE` is also interesting
+- it might be the reason Malwarebytes flagged the sample as a `Systemkiller`
+
+
+### DLL
+
+
+```
+Offset	Size	Type	String
+0000004d	28	A	!This program cannot be run in DOS mode.
+000001d8	05	A	.text
+000001ff	07	A	`.rdata
+00000227	06	A	@.data
+00000250	06	A	.reloc
+00001075	05	A	L$xQh
+000010f9	05	A	IQh `
+00001189	06	A	L$4PQj
+00001354	05	A	u7WPS
+00001365	05	A	u&WVS
+0000210a	0b	A	CloseHandle
+00002118	05	A	Sleep
+00002120	0e	A	CreateProcessA
+00002132	0c	A	CreateMutexA
+00002142	0a	A	OpenMutexA
+0000214e	0c	A	KERNEL32.dll
+0000215c	0a	A	WS2_32.dll
+0000216a	07	A	strncmp
+00002172	0a	A	MSVCRT.dll
+00002188	09	A	_initterm
+00002194	06	A	malloc
+0000219e	0c	A	_adjust_fdiv
+00026018	05	A	sleep
+00026020	05	A	hello
+00026028	0d	A	127.26.152.13
+00026038	08	A	SADFHUHF
+00027008	0a	A	/0I0[0h0p0
+00027027	0b	A	1141G1[1l1
+00027039	0b	A	1Y2a2g2r22
+0002705b	05	A	3!3}3
+```
+
+- as we can see there are some function names which seem to be imported by the dll
+- we can also spot an IPv4 address looking string `127.26.152.13`
+
+## Inspecting Imports
+
+To get a further understanding of which functionality is provided by the files we will look at the imports from the Windows API.
+
+We will use PE Bear to inspect the import tables for the executable and the dll.
+
+### Exectuable
+
+The executable imports a set of Functions from `kernel32.dll`.
+![PEBear](images/prac_mal_ana_ch1_l1_exe_imports.png "Figure 3. PE Bear Import View")
+
+### DLL
+
+The dll imports functionality from 2 different dlls. 
+
+It imports functionality to create a Mutex, a data structure often used by malware to gurantee that only one instance of it runs on a system and it doesn't re-infect it unnecessaryly.
+
+![PEBearDllKernel32](images/prac_mal_ana_ch1_l1_dll_kernel32_imports.png "Figure 4 PE Import View")
+
+
+The other dll which functions are imported from is `ws2_32.dll`, a library used for network communication.
+
+![PEBearDllW2_32](images/prac_mal_ana_ch1_l1_dll_ws2_32_imports.png "Figure 5. PE Import View")
+
+ as we can see here the functions imported from `ws2_32.dll` are not imported by name but by ordinals
+- ordinal numbers are identifiers for functions exported by a dll, when accessing exported functions these can either be referenced by their name or the ordinal number
+- the problem with ordinal numbers used for imports is that these are not consistent across software versions
+- this required me to do some research as the sample is over 10 years old at this point, so I will have to consult an older source for imformation about `ws2_32.dll` ordinal numbers
+- luckily i found [this repository on github](https://github.com/phracker/HopperScripts/blob/master/WS2_32.dll%20Ordinals%20to%20Names.py) which is also about 10 years old, I will try to use this list to determine which functions are imported
+- the code:
+```python
+ordinals = {
+			'imp_ordinal_1' : 'imp_accept',
+			'imp_ordinal_2' : 'imp_bind',
+			'imp_ordinal_3' : 'imp_closesocket',
+			'imp_ordinal_4' : 'imp_connect',
+			'imp_ordinal_5' : 'imp_getpeername',
+			'imp_ordinal_6' : 'imp_getsockname',
+			'imp_ordinal_7' : 'imp_getsockopt',
+			'imp_ordinal_8' : 'imp_htonl',
+			'imp_ordinal_9' : 'imp_htons',
+			'imp_ordinal_10' : 'imp_ioctlsocket',
+			'imp_ordinal_11' : 'imp_inet_addr',
+			'imp_ordinal_12' : 'imp_inet_ntoa',
+			'imp_ordinal_13' : 'imp_listen',
+			'imp_ordinal_14' : 'imp_ntohl',
+			'imp_ordinal_15' : 'imp_ntohs',
+			'imp_ordinal_16' : 'imp_recv',
+			'imp_ordinal_17' : 'imp_recvfrom',
+			'imp_ordinal_18' : 'imp_select',
+			'imp_ordinal_19' : 'imp_send',
+			'imp_ordinal_20' : 'imp_sendto',
+			'imp_ordinal_21' : 'imp_setsockopt',
+			'imp_ordinal_22' : 'imp_shutdown',
+			'imp_ordinal_23' : 'imp_socket',
+			'imp_ordinal_24' : 'imp_GetAddrInfoW',
+			'imp_ordinal_25' : 'imp_GetNameInfoW',
+			'imp_ordinal_26' : 'imp_WSApSetPostRoutine',
+			'imp_ordinal_27' : 'imp_FreeAddrInfoW',
+			'imp_ordinal_28' : 'imp_WPUCompleteOverlappedRequest',
+			'imp_ordinal_29' : 'imp_WSAAccept',
+			'imp_ordinal_30' : 'imp_WSAAddressToStringA',
+			'imp_ordinal_31' : 'imp_WSAAddressToStringW',
+			'imp_ordinal_32' : 'imp_WSACloseEvent',
+			'imp_ordinal_33' : 'imp_WSAConnect',
+			'imp_ordinal_34' : 'imp_WSACreateEvent',
+			'imp_ordinal_35' : 'imp_WSADuplicateSocketA',
+			'imp_ordinal_36' : 'imp_WSADuplicateSocketW',
+			'imp_ordinal_37' : 'imp_WSAEnumNameSpaceProvidersA',
+			'imp_ordinal_38' : 'imp_WSAEnumNameSpaceProvidersW',
+			'imp_ordinal_39' : 'imp_WSAEnumNetworkEvents',
+			'imp_ordinal_40' : 'imp_WSAEnumProtocolsA',
+			'imp_ordinal_41' : 'imp_WSAEnumProtocolsW',
+			'imp_ordinal_42' : 'imp_WSAEventSelect',
+			'imp_ordinal_43' : 'imp_WSAGetOverlappedResult',
+			'imp_ordinal_44' : 'imp_WSAGetQOSByName',
+			'imp_ordinal_45' : 'imp_WSAGetServiceClassInfoA',
+			'imp_ordinal_46' : 'imp_WSAGetServiceClassInfoW',
+			'imp_ordinal_47' : 'imp_WSAGetServiceClassNameByClassIdA',
+			'imp_ordinal_48' : 'imp_WSAGetServiceClassNameByClassIdW',
+			'imp_ordinal_49' : 'imp_WSAHtonl',
+			'imp_ordinal_50' : 'imp_WSAHtons',
+			'imp_ordinal_51' : 'imp_gethostbyaddr',
+			'imp_ordinal_52' : 'imp_gethostbyname',
+			'imp_ordinal_53' : 'imp_getprotobyname',
+			'imp_ordinal_54' : 'imp_getprotobynumber',
+			'imp_ordinal_55' : 'imp_getservbyname',
+			'imp_ordinal_56' : 'imp_getservbyport',
+			'imp_ordinal_57' : 'imp_gethostname',
+			'imp_ordinal_58' : 'imp_WSAInstallServiceClassA',
+			'imp_ordinal_59' : 'imp_WSAInstallServiceClassW',
+			'imp_ordinal_60' : 'imp_WSAIoctl',
+			'imp_ordinal_61' : 'imp_WSAJoinLeaf',
+			'imp_ordinal_62' : 'imp_WSALookupServiceBeginA',
+			'imp_ordinal_63' : 'imp_WSALookupServiceBeginW',
+			'imp_ordinal_64' : 'imp_WSALookupServiceEnd',
+			'imp_ordinal_65' : 'imp_WSALookupServiceNextA',
+			'imp_ordinal_66' : 'imp_WSALookupServiceNextW',
+			'imp_ordinal_67' : 'imp_WSANSPIoctl',
+			'imp_ordinal_68' : 'imp_WSANtohl',
+			'imp_ordinal_69' : 'imp_WSANtohs',
+			'imp_ordinal_70' : 'imp_WSAProviderConfigChange',
+			'imp_ordinal_71' : 'imp_WSARecv',
+			'imp_ordinal_72' : 'imp_WSARecvDisconnect',
+			'imp_ordinal_73' : 'imp_WSARecvFrom',
+			'imp_ordinal_74' : 'imp_WSARemoveServiceClass',
+			'imp_ordinal_75' : 'imp_WSAResetEvent',
+			'imp_ordinal_76' : 'imp_WSASend',
+			'imp_ordinal_77' : 'imp_WSASendDisconnect',
+			'imp_ordinal_78' : 'imp_WSASendTo',
+			'imp_ordinal_79' : 'imp_WSASetEvent',
+			'imp_ordinal_80' : 'imp_WSASetServiceA',
+			'imp_ordinal_81' : 'imp_WSASetServiceW',
+			'imp_ordinal_82' : 'imp_WSASocketA',
+			'imp_ordinal_83' : 'imp_WSASocketW',
+			'imp_ordinal_84' : 'imp_WSAStringToAddressA',
+			'imp_ordinal_85' : 'imp_WSAStringToAddressW',
+			'imp_ordinal_86' : 'imp_WSAWaitForMultipleEvents',
+			'imp_ordinal_87' : 'imp_WSCDeinstallProvider',
+			'imp_ordinal_88' : 'imp_WSCEnableNSProvider',
+			'imp_ordinal_89' : 'imp_WSCEnumProtocols',
+			'imp_ordinal_90' : 'imp_WSCGetProviderPath',
+			'imp_ordinal_91' : 'imp_WSCInstallNameSpace',
+			'imp_ordinal_92' : 'imp_WSCInstallProvider',
+			'imp_ordinal_93' : 'imp_WSCUnInstallNameSpace',
+			'imp_ordinal_94' : 'imp_WSCUpdateProvider',
+			'imp_ordinal_95' : 'imp_WSCWriteNameSpaceOrder',
+			'imp_ordinal_96' : 'imp_WSCWriteProviderOrder',
+			'imp_ordinal_97' : 'imp_freeaddrinfo',
+			'imp_ordinal_98' : 'imp_getaddrinfo',
+			'imp_ordinal_99' : 'imp_getnameinfo',
+			'imp_ordinal_101' : 'imp_WSAAsyncSelect',
+			'imp_ordinal_102' : 'imp_WSAAsyncGetHostByAddr',
+			'imp_ordinal_103' : 'imp_WSAAsyncGetHostByName',
+			'imp_ordinal_104' : 'imp_WSAAsyncGetProtoByNumber',
+			'imp_ordinal_105' : 'imp_WSAAsyncGetProtoByName',
+			'imp_ordinal_106' : 'imp_WSAAsyncGetServByPort',
+			'imp_ordinal_107' : 'imp_WSAAsyncGetServByName',
+			'imp_ordinal_108' : 'imp_WSACancelAsyncRequest',
+			'imp_ordinal_109' : 'imp_WSASetBlockingHook',
+			'imp_ordinal_110' : 'imp_WSAUnhookBlockingHook',
+			'imp_ordinal_111' : 'imp_WSAGetLastError',
+			'imp_ordinal_112' : 'imp_WSASetLastError',
+			'imp_ordinal_113' : 'imp_WSACancelBlockingCall',
+			'imp_ordinal_114' : 'imp_WSAIsBlocking',
+			'imp_ordinal_115' : 'imp_WSAStartup',
+			'imp_ordinal_116' : 'imp_WSACleanup',
+			'imp_ordinal_151' : 'imp___WSAFDIsSet',
+			'imp_ordinal_500' : 'imp_WEP'
+}
+
+data = ["0x17", "0x73", "0xB", "0x4", "0x13", "0x16", "0x10", "0x3", "0x74", "0x9"]
+for val in data:
+	n = int(val, 16)
+	query = f"imp_ordinal_{n}"
+	res = ordinals.get(query, "Not found")
+	print(f"{query}: {res}")
+```
+
+- the list of ordinals in PE Bear is given as hexadecimal values (as there are values such as `B`)
+- the script above extracts the name for each of them from the dictionary
+- this resulted in the following list:
+
+```
+imp_ordinal_23: imp_socket
+imp_ordinal_115: imp_WSAStartup
+imp_ordinal_11: imp_inet_addr
+imp_ordinal_4: imp_connect
+imp_ordinal_19: imp_send
+imp_ordinal_22: imp_shutdown
+imp_ordinal_16: imp_recv
+imp_ordinal_3: imp_closesocket
+imp_ordinal_116: imp_WSACleanup
+imp_ordinal_9: imp_htons
+```
+
+- this looks like it would be the correct set of functions for communication with a C2
+- the imports include:
+	- function to initialize usage of `ws2_32.dll` with `WSAStartup` 
+	- function to `connect` to a remote `inet_addr`
+	- structs for a `socket` and an `inet_addr`
+	- function to receive data from a socket with `recv`
+	- function to send data over a socket with `send`
+	- function to parse bytes to be send from system bitness to TCP/IP bitness with `htons`
+	- function to close the socket with `closesocket`
+	- function to stop communication over a socket with `shutdown`
+	- function to end usage of `w2_32.dll` with `WSACleanup`
+
+## Answers
+
+1. There are alot of detections for the sample .exe as well as for .dll. As the samples are pretty old (> 10 years) there is a lot of different information that can be found on various Scanner Sites and Sandboxes. Some Information indicate that the executable was, at some point, delivered via a malspam campaign. Most signature hits determine the executable and the dll to be generice Win32 Malware / Trojans
+2. Detect it Easy shows Time Date Stamps of `2010-12-19 17:16:19` for the .exe sample and `2010-12-19 17:16:38` for the .dll
+3. Looking at the entropy of the files and online unpackers like [unpac me](https://unpac.me) they show no indicators that either of the files was packed or obfuscated
+4. The imports of the .exe file hint at the fact that its purpose is to write and copy file as well as jump through a list of files. The .dll file imports functions from kernel32.dll to create  a process as well as a mutex (a lockable type ) and the sleep. It also imports some functions from `ws2_32.dll` by their ordinal numbers. After a quick research it seems like the functions exported are the basic functionality used to communicate over the internet with a potential C2-Server.
+5. A host-based indicator might be the .dll file coming with the executable `Lab01-01.dll`
+6. The extracted strings from `Lab01-01.dll` contain an IPv4 address `127.26.152.13`
+7. As stated above the provided samples `Lab01-01.exe` and `Lab01-01.dll` provide the functionality to write and copy files to the system which hints at some kind of persistence via a file written to disc. Network capabilities and the IP address found might be an indicator that this sample establishes a connection to the C2 to receive further instructions. As the sample also is able to create a new process with `CreateProcessA` it might be able to receive shellcode from the C2 server which is then ran.
+
+
