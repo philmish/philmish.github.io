@@ -105,7 +105,7 @@ link = "https://philmish.github.io/"
       gravatarEmail = ""
       avatarURL = "https://avatars.githubusercontent.com/u/92064198?v=4"
       title = "Philmish"
-      subtitle = "Hey folks, I am a junior software developer"
+      subtitle = "Hey folks, I am a junior software developer interested in building tools, networks and security related topics. This place contains my writeups on projects and learning, as well as a collection of different info dumps for tools and stuff i am playing around with."
       typeit = false
       social = true
       disclaimer = ""
