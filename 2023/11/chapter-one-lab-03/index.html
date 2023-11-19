@@ -1,0 +1,170 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title>Practical Malware Analysis Chapter 1 Lab 3 - cat /usr/share</title><meta name=Description content="My write up for the analysis of Lab 3 from the first chaptr of Practical Malware Analysis"><meta property="og:title" content="Practical Malware Analysis Chapter 1 Lab 3">
+<meta property="og:description" content="My write up for the analysis of Lab 3 from the first chaptr of Practical Malware Analysis"><meta property="og:type" content="article"><meta property="og:url" content="https://philmish.github.io/2023/11/chapter-one-lab-03/"><meta property="og:image" content="https://philmish.github.io/logo.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-11-06T00:00:00+00:00"><meta property="article:modified_time" content="2023-11-06T00:00:00+00:00"><meta property="og:site_name" content="ls /usr/share"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://philmish.github.io/logo.png"><meta name=twitter:title content="Practical Malware Analysis Chapter 1 Lab 3"><meta name=twitter:description content="My write up for the analysis of Lab 3 from the first chaptr of Practical Malware Analysis"><meta name=application-name content="Philmish's Blog"><meta name=apple-mobile-web-app-title content="Philmish's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://philmish.github.io/2023/11/chapter-one-lab-03/><link rel=prev href=https://philmish.github.io/2023/11/chapter-one-lab-01/><link rel=next href=https://philmish.github.io/2023/11/intel86_assembly/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload='this.onload=null,this.rel="stylesheet"'><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload='this.onload=null,this.rel="stylesheet"'><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Practical Malware Analysis Chapter 1 Lab 3","inLanguage":"en-us","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/philmish.github.io\/2023\/11\/chapter-one-lab-03\/"},"genre":"posts","keywords":"Practical Malware Analysis, Writeup, Reverse Engineering, Learning","wordcount":1531,"url":"https:\/\/philmish.github.io\/2023\/11\/chapter-one-lab-03\/","datePublished":"2023-11-06T00:00:00+00:00","dateModified":"2023-11-06T00:00:00+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"philmish"},"description":"My write up for the analysis of Lab 3 from the first chaptr of Practical Malware Analysis"}</script></head><body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"dark"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"dark"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="cat /usr/share"><span class=header-title-pre><i class='fa-solid fa-terminal' aria-hidden=true></i></span><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/ title=Posts><i class="fa-solid fa-file"></i> </a><a class=menu-item href=/tags/ title=Tags><i class="fa-solid fa-tag"></i> </a><a class=menu-item href=/categories/ title=Categories><i class="fa-solid fa-sitemap"></i> </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder="Search titles or contents..." id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i>
+</span></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme"><i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="cat /usr/share"><span class=header-title-pre><i class='fa-solid fa-terminal' aria-hidden=true></i></span><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder="Search titles or contents..." id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/posts/ title=Posts><i class="fa-solid fa-file"></i></a><a class=menu-item href=/tags/ title=Tags><i class="fa-solid fa-tag"></i></a><a class=menu-item href=/categories/ title=Categories><i class="fa-solid fa-sitemap"></i></a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Practical Malware Analysis Chapter 1 Lab 3</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://philmish.github.io/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>philmish</a></span>&nbsp;<span class=post-category>included in <a href=/categories/learning/><i class="far fa-folder fa-fw" aria-hidden=true></i>Learning</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2023-11-06>2023-11-06</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;1531 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;8 minutes&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/images/cover_prac_mal_ana.png data-srcset="/images/cover_prac_mal_ana.png, /images/cover_prac_mal_ana.png 1.5x, /images/cover_prac_mal_ana.png 2x" data-sizes=auto alt=/images/cover_prac_mal_ana.png title="My write up for the analysis of Lab 3 from the first chaptr of Practical Malware Analysis" width=1020 height=682></div><div class="details toc" id=toc-static data-kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#questions>Questions</a></li><li><a href=#initial-analysis>Initial analysis</a><ul><li><a href=#extracted-hashes>Extracted Hashes</a></li><li><a href=#imports>Imports</a></li><li><a href=#is-it-packed->Is it packed ?</a></li><li><a href=#how-fsg-works>How FSG works</a></li><li><a href=#so-can-we-unpack-it->So, can we unpack it ?</a></li></ul></li><li><a href=#the-unpacked-sample>The unpacked Sample</a><ul><li><a href=#hashes>Hashes</a></li><li><a href=#strings>Strings</a></li><li><a href=#imports-1>Imports</a></li></ul></li><li><a href=#answers>Answers</a><ul><li><a href=#ps>PS</a></li></ul></li></ul></nav></div></div><div class=content id=content><p>This lab turned out to be a bit more complicated than the two before. I spend a considerable amount of time figuring out how to unpack the provided sample, partly due to problems with setting up the tooling I wanted to use correctly (python3.10 backwards compatability can be a bitch).</p><p>In addition to <a href=https://github.com/hasherezade/pe-bear target=_blank rel="noopener noreffer">PE Bear</a> and <a href=https://github.com/horsicq/Detect-It-Easy target=_blank rel="noopener noreffer">Detect it easy</a> I used <a href=https://github.com/wolfram77web/app-peid target=_blank rel="noopener noreffer">PEiD</a> to identify the packer and a tool I found called <code>unipacker</code>. More about that later in the post.</p><h2 id=questions>Questions</h2><ol><li>Are there any signature detections on VT ?</li><li>Are there indicators for packing or obfuscation ? If so, unpack/de-obfuscate the sample.</li><li>Do any imports hint at the samples functionality ? If so which imports are they and what do they tell you ?</li><li>What host-based or network-based indicators could be used to identify this malware on infected machines ?</li></ol><h2 id=initial-analysis>Initial analysis</h2><p>As I did with the two samples before I ran <code>Detect it easy</code> against the provided sample. There were a few things I noticed intriguing.</p><ol><li>There were no signatures detected for a compiler or linker</li><li>The time stamp showed as <code>1970-01-01 01:00:00</code>, a sign that it was tempered with</li><li><code>Detect it easy</code> also couldn&rsquo;t extract any information on imports from the sample</li></ol><h3 id=extracted-hashes>Extracted Hashes</h3><ul><li>MD5 <code>9c5c27494c28ed0b14853b346b113145</code></li><li>SHA1 <code>290ab6f431f46547db2628c494ce615d6061ceb8</code></li><li>SHA256 <code>7983a582939924c70e3da2da80fd3352ebc90de7b8c4c427d484ff4f050f0aec</code></li></ul><h3 id=imports>Imports</h3><p>The only imports found by <code>PE Bear</code> are <code>LoadLibraryA</code> and <code>GetProcAddress</code> from <code>kernel32.dll</code>.
+These are used for importing DLLs and their functionality.</p><h3 id=is-it-packed->Is it packed ?</h3><p>These discoveries made me take a look at the sample with <code>PEiD</code>, a program used to detect common packing formats on binaries.</p><p><figure><a class=lightgallery href=/images/prac_mal_ana_ch1_l3_peid.png title="PEiD Output" data-thumbnail=/images/prac_mal_ana_ch1_l3_peid.png data-sub-html="<h2>Figure 1. PEiD packer detection</h2><p>PEiD Output</p>"><img class=lazyload src=/svg/loading.min.svg data-src=/images/prac_mal_ana_ch1_l3_peid.png data-srcset="/images/prac_mal_ana_ch1_l3_peid.png, /images/prac_mal_ana_ch1_l3_peid.png 1.5x, /images/prac_mal_ana_ch1_l3_peid.png 2x" data-sizes=auto alt=/images/prac_mal_ana_ch1_l3_peid.png width=417 height=234></a><figcaption class=image-caption>Figure 1. PEiD packer detection</figcaption></figure></p><p>As we can see from the output, the sample is indeed packed. The packer used is called <code>FSG</code>. After a little bit of research I found <a href=https://www.mnin.org/write/2006_unpacking_fsg.pdf target=_blank rel="noopener noreffer">this article</a> which describes how to unpack an executbale packed with <code>FSG</code> with the help of a debugger.</p><h3 id=how-fsg-works>How FSG works</h3><p>I am still in the phase of getting started with learning the concepts of x86 assembly so alot of this still went over my head, but I am trying to describe what I took from the article.</p><p>The article describes that the first instructions of the program is an <code>xchg</code>, which is used to make the stack pointer (<code>ESP</code>) to a DWORD, in the case of the article at offset <code>4094E8h</code>.
+This DWORD is <code>4094CCh</code>, which points the stack pointer to a segment containing additional data.</p><p>After the first <code>xchg</code> instruction the two values on top of the stack are <code>00401000h</code> and <code>00407000h</code>. After the <code>xchg</code> the next instruction is a <code>popa</code>.
+This instructions pops values of the stack into the general purpose registers. <code>popa</code> ,which is the next instruction, is used to pop <code>WORD</code> sized, so 16bit, values into the subregisters of the general purpose registers.
+The order in which the sub regsiters are filled in this case are: <code>DI</code> <code>SI</code> <code>BP</code> <code>BX</code> and so on. So in case of the prgram we look at in the article means that the lower 16 bit of the <code>EDI</code> and <code>ESI</code> registers will be set with the values on top of the stack.</p><p>Researching those registers online (and by going ahead a bit in the book) I found out that those regsiters are often used with <code>rep</code> instructions, such as <code>movsb</code>.
+These instructions are used to automatically move a bunch of bytes from one buffer to another.</p><p>This matches with the functionality further explained by the article. It states, that <code>EDI</code> and <code>ESI</code> are used to move bytes between two segments delimited by the two addresses in the registers after the <code>popa</code>, <code>00401000h</code> and <code>00407000h</code>.
+It is also stated that in case of the sample looked at in the article, this goes on until the first segment contains the names of the <code>DLLs</code> and their exports used by the program.
+After that <code>LoadLibraryA</code> and <code>GetProcAddress</code> are used to actually import them. This unveils the actual functionality of the program.</p><h3 id=so-can-we-unpack-it->So, can we unpack it ?</h3><p>During my research about <code>FSG</code> I found that most of the things which came up are actual write-ups or videos about this lab.
+Because it felt like cheating to me at first I left those alone.
+But after reading up on the packer I was curious to find out what the unpacked version of the sample actually does.</p><p>I found <a href="https://www.youtube.com/watch?v=ee5_JUIEf8Q&amp;ab_channel=Prof.ChrisDietrich" target=_blank rel="noopener noreffer">this video</a> which demonstrates the usage of a tool written in python called <code>unipacker</code> for which the code can be found <a href=https://github.com/unipacker/unipacker/tree/master target=_blank rel="noopener noreffer">here</a>
+Unipacker uses emulation to, like a debugger, step through a program for unpacking. It is based on <code>Capstone</code> one of the biggest disassembler library out there. It is also used in a lot of other tooling.</p><p>The use of the tool condenses the effort of unpacking the sample down to three instructions provided to unipacker. My assumption is that it steps through the program until the data moving and importing part is over and extracts the resulting PE from it, reconstructing the actual import table.</p><p>After some struggles with getting it to run with python3.10 I used <code>pyenv</code> to install python3.8 to my environment and <code>unipacker</code> ran without problems.
+As python3.10 moved some imports from one module of the stdlib to another alot of older python code ran under 3.10 breaks on these older imports.
+I encountered the same problem with some older code at work.</p><h2 id=the-unpacked-sample>The unpacked Sample</h2><p>This section will be kept short. I used the usual tools to collect static information from the unpacked sample.</p><h3 id=hashes>Hashes</h3><ul><li>MD5 <code>0b828a7ccf370a5c9d5ca4bcba6dbebe</code></li><li>SHA1 <code>08f610cd9d694fc08fe12356001d07bf2600c8ec</code></li><li>SHA256 <code>0fd9f5bcacddc526091630e269de92c50da8b7e85186d68a75418cade20475be</code></li></ul><h3 id=strings>Strings</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>Offset	Size	Type	String
+</span></span><span class=line><span class=cl>0000004d	10	A	!Windows Program
+</span></span><span class=line><span class=cl>0000020f	07	A	`.rdata
+</span></span><span class=line><span class=cl>00000237	06	A	@.data
+</span></span><span class=line><span class=cl>00000e2e	05	A	$s3
+</span></span><span class=line><span class=cl>00000f34	0c	A	KERNEL32.dll
+</span></span><span class=line><span class=cl>00000f42	0c	A	LoadLibraryA
+</span></span><span class=line><span class=cl>00000f50	0e	A	GetProcAddress
+</span></span><span class=line><span class=cl>00001013	05	A	Phh @
+</span></span><span class=line><span class=cl>0000106e	06	A	L$$QVP
+</span></span><span class=line><span class=cl>00002167	09	A	ole32.dll
+</span></span><span class=line><span class=cl>00002171	0d	A	OleInitialize
+</span></span><span class=line><span class=cl>0000217f	10	A	CoCreateInstance
+</span></span><span class=line><span class=cl>00002190	0f	A	OleUninitialize
+</span></span><span class=line><span class=cl>000021a5	0c	A	OLEAUT32.dll
+</span></span><span class=line><span class=cl>000021c9	0a	A	MSVCRT.dll
+</span></span><span class=line><span class=cl>000021d4	0d	A	__getmainargs
+</span></span><span class=line><span class=cl>000021e2	0a	A	_controlfp
+</span></span><span class=line><span class=cl>000021ed	10	A	_except_handler3
+</span></span><span class=line><span class=cl>000021fe	0e	A	__set_app_type
+</span></span><span class=line><span class=cl>0000220d	0a	A	__p__fmode
+</span></span><span class=line><span class=cl>00002218	0c	A	__p__commode
+</span></span><span class=line><span class=cl>00002225	05	A	_exit
+</span></span><span class=line><span class=cl>0000222b	0b	A	_XcptFilter
+</span></span><span class=line><span class=cl>0000223c	0d	A	__p___initenv
+</span></span><span class=line><span class=cl>0000224a	09	A	_initterm
+</span></span><span class=line><span class=cl>00002254	10	A	__setusermatherr
+</span></span><span class=line><span class=cl>00002265	0c	A	_adjust_fdiv
+</span></span><span class=line><span class=cl>00003010	2a	U	http://www.malwareanalysisbook.com/ad.html
+</span></span><span class=line><span class=cl>00004015	05	A	Ph8j
+</span></span><span class=line><span class=cl>00004025	05	A	3Bt&gt;O
+</span></span><span class=line><span class=cl>00004042	06	A	2]&lt;,M
+</span></span><span class=line><span class=cl>00004089	07	A	 S&gt;VWe
+</span></span><span class=line><span class=cl>000040ca	05	A	&#34;Z,Y
+</span></span><span class=line><span class=cl>000040e6	05	A	5pg
+</span></span><span class=line><span class=cl>00004133	06	A	@^J%
+</span></span><span class=line><span class=cl>00004144	06	A	I*G9&gt;
+</span></span><span class=line><span class=cl>000041b3	07	A	&lt;d,Ll
+</span></span><span class=line><span class=cl>000041c5	08	A	ole32.vd
+</span></span><span class=line><span class=cl>000041d1	05	A	Init
+</span></span><span class=line><span class=cl>000041ec	05	A	U!!C
+</span></span><span class=line><span class=cl>000041f4	09	A	}OLEAUTLA
+</span></span><span class=line><span class=cl>0000420a	0a	A	IMSVCRTT&#34;b
+</span></span><span class=line><span class=cl>00004215	07	A	_getmas
+</span></span><span class=line><span class=cl>0000421d	07	A	yrcsco
+</span></span><span class=line><span class=cl>00004228	06	A	fpex
+</span></span><span class=line><span class=cl>00004235	07	A	|P2r3Us
+</span></span><span class=line><span class=cl>0000423f	05	A	p|vuy
+</span></span><span class=line><span class=cl>00004260	05	A	rh#
+</span></span><span class=line><span class=cl>0000502e	05	A	$s3
+</span></span><span class=line><span class=cl>00005134	0c	A	KERNEL32.dll
+</span></span><span class=line><span class=cl>00005142	0c	A	LoadLibraryA
+</span></span><span class=line><span class=cl>00005150	0e	A	GetProcAddress
+</span></span><span class=line><span class=cl>00009050	09	A	ole32.dll
+</span></span><span class=line><span class=cl>0000905a	0c	A	OLEAUT32.dll
+</span></span><span class=line><span class=cl>00009067	0a	A	MSVCRT.dll
+</span></span><span class=line><span class=cl>000090a0	0d	A	OleInitialize
+</span></span><span class=line><span class=cl>000090b0	10	A	CoCreateInstance
+</span></span><span class=line><span class=cl>000090c3	0f	A	OleUninitialize
+</span></span><span class=line><span class=cl>00009145	0d	A	__getmainargs
+</span></span><span class=line><span class=cl>00009155	0a	A	_controlfp
+</span></span><span class=line><span class=cl>00009162	10	A	_except_handler3
+</span></span><span class=line><span class=cl>00009175	0e	A	__set_app_type
+</span></span><span class=line><span class=cl>00009186	0a	A	__p__fmode
+</span></span><span class=line><span class=cl>00009193	0c	A	__p__commode
+</span></span><span class=line><span class=cl>000091a2	05	A	_exit
+</span></span><span class=line><span class=cl>000091aa	0b	A	_XcptFilter
+</span></span><span class=line><span class=cl>000091bf	0d	A	__p___initenv
+</span></span><span class=line><span class=cl>000091cf	09	A	_initterm
+</span></span><span class=line><span class=cl>000091db	10	A	__setusermatherr
+</span></span><span class=line><span class=cl>000091ee	0c	A	_adjust_fdiv
+</span></span></code></pre></td></tr></table></div></div><h3 id=imports-1>Imports</h3><p>The unpacked sample contains imports from <code>ole32.dll</code> and <code>oleauth32.dll</code>. Those are libraries used for the management and manipulation of <code>COM</code> objects.</p><p><code>COM</code> or <code>Component Object Model</code> is a standard for binary interfaces, published in 1993 by Microsoft. <a href=https://en.wikipedia.org/wiki/Component_Object_Model target=_blank rel="noopener noreffer">Wikipedia</a></p><p>According to the Wiki article it is the basis for several of Microsofts technologies. One which correlates to the <code>ole</code> libraries we saw, which might be interesting in the context of malware is the possibility for inter process communication and automation provided by <code>ole</code>.
+These might be used to gain persistence by injecting code in automated startup procedures.</p><h2 id=answers>Answers</h2><ol><li>There are multiple hits for the sample in its packed as well as in its unpacked version</li><li>The sample is packed with the <code>sfg (safe, fast good)</code> packer. To unpack it I used the emulation tool <code>unipack</code>. It performed operations usualy done with a debugger to extract the unpacked program code from the sample. After some setup the tool worked and extracted the unpacked program code successfuly</li><li>The unpacked sample imports the <code>ole32.dll</code> library, which is used to create and control COM Objects.</li><li>After extracting strings from the unpacked sample I found a web address <code>http://www.malwareanalysisbook.com/ad.html</code> which could be used to monitor for malicious traffic. For host-based indicators I dont know if the interaction with COM Objects might provide a possibility to monitor for malicious activity from the sample on an infected host</li></ol><h3 id=ps>PS</h3><p>After finishing my write-up I took a look at the solution provided by the book. Turns out the book didn&rsquo;t expect you to unpack the sample</p><p><code>¯\_(ツ)_/¯</code></p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2023-11-06</span></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://philmish.github.io/2023/11/chapter-one-lab-03/ data-title="Practical Malware Analysis Chapter 1 Lab 3" data-hashtags="Practical Malware Analysis,Writeup,Reverse Engineering,Learning"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://philmish.github.io/2023/11/chapter-one-lab-03/ data-hashtag="Practical Malware Analysis"><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://philmish.github.io/2023/11/chapter-one-lab-03/ data-title="Practical Malware Analysis Chapter 1 Lab 3"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://philmish.github.io/2023/11/chapter-one-lab-03/ data-title="Practical Malware Analysis Chapter 1 Lab 3"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://philmish.github.io/2023/11/chapter-one-lab-03/ data-title="Practical Malware Analysis Chapter 1 Lab 3" data-image=images/cover_prac_mal_ana.png><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw" aria-hidden=true></i>&nbsp;<a href=/tags/practical-malware-analysis/>Practical Malware Analysis</a>,&nbsp;<a href=/tags/writeup/>Writeup</a>,&nbsp;<a href=/tags/reverse-engineering/>Reverse Engineering</a>,&nbsp;<a href=/tags/learning/>Learning</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/2023/11/chapter-one-lab-01/ class=prev rel=prev title="Practical Malware Analysis Chapter 1 Lab 1"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>Practical Malware Analysis Chapter 1 Lab 1</a>
+<a href=/2023/11/intel86_assembly/ class=next rel=next title="Intel x86 Assembly Overview">Intel x86 Assembly Overview<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2023</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://philmish.github.io/ target=_blank>philmish</a></span>&nbsp;|&nbsp;<span class=license><a rel="This is free and unencumbered software released into the public domain." href=https://unlicense.org target=_blank>The Unlicense</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw" aria-hidden=true></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{},data:{"id-1":"ls /usr/share","id-2":"ls /usr/share"},lightgallery:!0,search:{algoliaAppID:"",algoliaIndex:"",algoliaSearchKey:"",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:30,type:"algolia"},twemoji:!0,typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:100}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
