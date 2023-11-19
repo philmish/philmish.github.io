@@ -2,7 +2,7 @@ baseURL = "https://philmish.github.io/"
 
 theme = "LoveIt"
 
-title = "Philmish's Blog"
+title = "cat /usr/share"
 
 languageCode = "en-us"
 languageName  = "English"
@@ -42,7 +42,7 @@ link = "https://philmish.github.io/"
     gitRepo = "https://github.com/dillonzq/LoveIt"
     fingerprint = ""
     dateFormat = "2006-01-02"
-    title = "Phlmish's Blog"
+    title = "ls /usr/share"
     description = "A little bit of this and a little bit of that."
     images = ["/logo.png"]
 
@@ -51,7 +51,7 @@ link = "https://philmish.github.io/"
         mobileMode = "auto"
         [params.header.title]
             logo = ""
-            name = "Philmish's Blog"
+            name = "ls /usr/share"
             pre = "<i class='fa-solid fa-terminal' aria-hidden='true'></i>"
             post = ""
             typeit = true
@@ -62,7 +62,7 @@ link = "https://philmish.github.io/"
     hugo = false
     copyright = true
     author = true
-    since = 2019
+    since = 2023
     icp = ""
     license= '<a rel="This is free and unencumbered software released into the public domain." href="https://unlicense.org" target="_blank">The Unlicense</a>'
 
@@ -104,8 +104,8 @@ link = "https://philmish.github.io/"
       enable = true
       gravatarEmail = ""
       avatarURL = "https://avatars.githubusercontent.com/u/92064198?v=4"
-      title = "Philmish"
-      subtitle = "Hey folks, I am a junior software developer interested in building tools, networks and security related topics. This place contains my writeups on projects and learning, as well as a collection of different info dumps for tools and stuff i am playing around with."
+      title = "Hey folks,"
+      subtitle = "I am a junior software developer interested in building tools, networks and security related topics. This place contains my writeups on projects and learning, as well as a collection of different info dumps for tools and stuff i am playing around with."
       typeit = false
       social = true
       disclaimer = ""
