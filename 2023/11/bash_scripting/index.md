@@ -4,7 +4,7 @@
 This post is a small summary of the basics of bash scripting. It contains some useful code snippets as well. 
 
 
-arsing Arguments to a script with `getopts`
+## Parsing Arguments to a script with `getopts`
 
 ```bash
 ARGS=$@

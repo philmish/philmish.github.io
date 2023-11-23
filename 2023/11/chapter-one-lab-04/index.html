@@ -1,0 +1,248 @@
+<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title>Practical Malware Analysis Chapter 1 Lab 4 - cat /usr/share</title><meta name=Description content="My write up for the analysis of Lab 4 from the first chapter of Practical Malware Analysis"><meta property="og:title" content="Practical Malware Analysis Chapter 1 Lab 4">
+<meta property="og:description" content="My write up for the analysis of Lab 4 from the first chapter of Practical Malware Analysis"><meta property="og:type" content="article"><meta property="og:url" content="https://philmish.github.io/2023/11/chapter-one-lab-04/"><meta property="og:image" content="https://philmish.github.io/logo.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-11-09T00:00:00+00:00"><meta property="article:modified_time" content="2023-11-09T00:00:00+00:00"><meta property="og:site_name" content="ls /usr/share"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://philmish.github.io/logo.png"><meta name=twitter:title content="Practical Malware Analysis Chapter 1 Lab 4"><meta name=twitter:description content="My write up for the analysis of Lab 4 from the first chapter of Practical Malware Analysis"><meta name=application-name content="Philmish's Blog"><meta name=apple-mobile-web-app-title content="Philmish's Blog"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://philmish.github.io/2023/11/chapter-one-lab-04/><link rel=prev href=https://philmish.github.io/2023/11/chapter-one-lab-03/><link rel=next href=https://philmish.github.io/2023/11/intel86_assembly/><link rel=stylesheet href=/css/style.min.css><link rel=preload href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css as=style onload='this.onload=null,this.rel="stylesheet"'><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css></noscript><link rel=preload href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css as=style onload='this.onload=null,this.rel="stylesheet"'><noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Practical Malware Analysis Chapter 1 Lab 4","inLanguage":"en-us","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/philmish.github.io\/2023\/11\/chapter-one-lab-04\/"},"genre":"posts","keywords":"Practical Malware Analysis, Writeup, Reverse Engineering, Learning","wordcount":1357,"url":"https:\/\/philmish.github.io\/2023\/11\/chapter-one-lab-04\/","datePublished":"2023-11-09T00:00:00+00:00","dateModified":"2023-11-09T00:00:00+00:00","publisher":{"@type":"Organization","name":""},"author":{"@type":"Person","name":"philmish"},"description":"My write up for the analysis of Lab 4 from the first chapter of Practical Malware Analysis"}</script></head><body data-header-desktop=fixed data-header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"dark"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"dark"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="cat /usr/share"><span class=header-title-pre><i class='fa-solid fa-terminal' aria-hidden=true></i></span><span id=id-1 class=typeit></span></a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/ title=Posts><i class="fa-solid fa-file"></i> </a><a class=menu-item href=/tags/ title=Tags><i class="fa-solid fa-tag"></i> </a><a class=menu-item href=/categories/ title=Categories><i class="fa-solid fa-sitemap"></i> </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder="Search titles or contents..." id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=Search><i class="fas fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=Clear><i class="fas fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i>
+</span></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme"><i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="cat /usr/share"><span class=header-title-pre><i class='fa-solid fa-terminal' aria-hidden=true></i></span><span id=id-2 class=typeit></span></a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder="Search titles or contents..." id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=Search><i class="fas fa-search fa-fw" aria-hidden=true></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=Clear><i class="fas fa-times-circle fa-fw" aria-hidden=true></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin" aria-hidden=true></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>Cancel</a></div><a class=menu-item href=/posts/ title=Posts><i class="fa-solid fa-file"></i></a><a class=menu-item href=/tags/ title=Tags><i class="fa-solid fa-tag"></i></a><a class=menu-item href=/categories/ title=Categories><i class="fa-solid fa-sitemap"></i></a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw" aria-hidden=true></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Practical Malware Analysis Chapter 1 Lab 4</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://philmish.github.io/ title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw" aria-hidden=true></i>philmish</a></span>&nbsp;<span class=post-category>included in <a href=/categories/learning/><i class="far fa-folder fa-fw" aria-hidden=true></i>Learning</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw" aria-hidden=true></i>&nbsp;<time datetime=2023-11-09>2023-11-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden=true></i>&nbsp;1357 words&nbsp;
+<i class="far fa-clock fa-fw" aria-hidden=true></i>&nbsp;7 minutes&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/images/cover_prac_mal_ana.png data-srcset="/images/cover_prac_mal_ana.png, /images/cover_prac_mal_ana.png 1.5x, /images/cover_prac_mal_ana.png 2x" data-sizes=auto alt=/images/cover_prac_mal_ana.png title="My write up for the analysis of Lab 4 from the first chapter of Practical Malware Analysis" width=1020 height=682></div><div class="details toc" id=toc-static data-kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right" aria-hidden=true></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#questions>Questions</a></li><li><a href=#basic-static-analysis>Basic static analysis</a><ul><li><a href=#online-resources>Online Resources</a></li><li><a href=#hashes>Hashes</a></li><li><a href=#strings>Strings</a></li><li><a href=#imports>Imports</a><ul><li><a href=#kernel32dll>kernel32.dll</a></li><li><a href=#advapidll>advapi.dll</a></li></ul></li></ul></li><li><a href=#extracting-the-resource>Extracting the resource</a><ul><li><a href=#hashes-1>Hashes</a></li><li><a href=#imports-1>Imports</a><ul><li><a href=#kernel32dll-1>kernel32.dll</a></li><li><a href=#urlmondll>urlmon.dll</a></li></ul></li></ul></li><li><a href=#answers>Answers</a></li></ul></nav></div></div><div class=content id=content><p>After falling down the rabbit hole of unpacking the previous sample, this one will be a bit shorter again.</p><h2 id=questions>Questions</h2><ol><li>Are there any existing signatures for the sample on virus total ?</li><li>Are there indications that the file was obfuscated or packed ? If the file is packed, unpack it if possible.</li><li>When was the program compiled ?</li><li>Do any imports hint at the programs functionality ? If some which imports are they and what do they tell you ?</li><li>What host- and network-based indicators could be used to identify this malware on infected machines ?</li><li>This file has one resource in the resource section. Use resource hacker to examine that resource, and then use it to extract that resource. What can you learn from the resource ?</li></ol><h2 id=basic-static-analysis>Basic static analysis</h2><h3 id=online-resources>Online Resources</h3><ul><li><a href=https://www.virustotal.com/gui/file/0fa1498340fca6c562cfa389ad3e93395f44c72fd128d7ba08579a69aaf3b126 target=_blank rel="noopener noreffer">Virus Total Report</a></li></ul><h3 id=hashes>Hashes</h3><ul><li>MD5 <code>625ac05fd47adc3c63700c3b30de79ab</code></li><li>SHA1 <code>9369d80106dd245938996e245340a3c6f17587fe</code></li><li>SHA256 <code>9369d80106dd245938996e245340a3c6f17587fe</code></li></ul><h3 id=strings>Strings</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>Offset	Size	Type	String
+</span></span><span class=line><span class=cl>004d	28	A	!This program cannot be run in DOS mode.
+</span></span><span class=line><span class=cl>01e0	05	A	.text
+</span></span><span class=line><span class=cl>0207	07	A	`.rdata
+</span></span><span class=line><span class=cl>022f	06	A	@.data
+</span></span><span class=line><span class=cl>0258	05	A	.rsrc
+</span></span><span class=line><span class=cl>1284	05	A	Qhd0@
+</span></span><span class=line><span class=cl>218a	0b	A	CloseHandle
+</span></span><span class=line><span class=cl>2198	0b	A	OpenProcess
+</span></span><span class=line><span class=cl>21a6	11	A	GetCurrentProcess
+</span></span><span class=line><span class=cl>21ba	12	A	CreateRemoteThread
+</span></span><span class=line><span class=cl>21d0	0e	A	GetProcAddress
+</span></span><span class=line><span class=cl>21e2	0c	A	LoadLibraryA
+</span></span><span class=line><span class=cl>21f2	07	A	WinExec
+</span></span><span class=line><span class=cl>21fc	09	A	WriteFile
+</span></span><span class=line><span class=cl>2208	0b	A	CreateFileA
+</span></span><span class=line><span class=cl>2216	0e	A	SizeofResource
+</span></span><span class=line><span class=cl>2228	0c	A	LoadResource
+</span></span><span class=line><span class=cl>2238	0d	A	FindResourceA
+</span></span><span class=line><span class=cl>2248	10	A	GetModuleHandleA
+</span></span><span class=line><span class=cl>225c	14	A	GetWindowsDirectoryA
+</span></span><span class=line><span class=cl>2274	09	A	MoveFileA
+</span></span><span class=line><span class=cl>2280	0c	A	GetTempPathA
+</span></span><span class=line><span class=cl>228e	0c	A	KERNEL32.dll
+</span></span><span class=line><span class=cl>229e	15	A	AdjustTokenPrivileges
+</span></span><span class=line><span class=cl>22b6	15	A	LookupPrivilegeValueA
+</span></span><span class=line><span class=cl>22ce	10	A	OpenProcessToken
+</span></span><span class=line><span class=cl>22e0	0c	A	ADVAPI32.dll
+</span></span><span class=line><span class=cl>22f0	09	A	_snprintf
+</span></span><span class=line><span class=cl>22fa	0a	A	MSVCRT.dll
+</span></span><span class=line><span class=cl>2308	05	A	_exit
+</span></span><span class=line><span class=cl>2310	0b	A	_XcptFilter
+</span></span><span class=line><span class=cl>2326	0d	A	__p___initenv
+</span></span><span class=line><span class=cl>2336	0d	A	__getmainargs
+</span></span><span class=line><span class=cl>2346	09	A	_initterm
+</span></span><span class=line><span class=cl>2352	10	A	__setusermatherr
+</span></span><span class=line><span class=cl>2366	0c	A	_adjust_fdiv
+</span></span><span class=line><span class=cl>2376	0c	A	__p__commode
+</span></span><span class=line><span class=cl>2386	0a	A	__p__fmode
+</span></span><span class=line><span class=cl>2394	0e	A	__set_app_type
+</span></span><span class=line><span class=cl>23a6	10	A	_except_handler3
+</span></span><span class=line><span class=cl>23ba	0a	A	_controlfp
+</span></span><span class=line><span class=cl>23c8	08	A	_stricmp
+</span></span><span class=line><span class=cl>3010	0c	A	winlogon.exe
+</span></span><span class=line><span class=cl>3020	0a	A	&lt;not real&gt;
+</span></span><span class=line><span class=cl>302c	10	A	SeDebugPrivilege
+</span></span><span class=line><span class=cl>3040	0a	A	sfc_os.dll
+</span></span><span class=line><span class=cl>304c	15	A	\system32\wupdmgr.exe
+</span></span><span class=line><span class=cl>3078	12	A	EnumProcessModules
+</span></span><span class=line><span class=cl>308c	09	A	psapi.dll
+</span></span><span class=line><span class=cl>3098	12	A	GetModuleBaseNameA
+</span></span><span class=line><span class=cl>30ac	09	A	psapi.dll
+</span></span><span class=line><span class=cl>30b8	0d	A	EnumProcesses
+</span></span><span class=line><span class=cl>30c8	09	A	psapi.dll
+</span></span><span class=line><span class=cl>30d4	15	A	\system32\wupdmgr.exe
+</span></span><span class=line><span class=cl>30f4	0a	A	\winup.exe
+</span></span><span class=line><span class=cl>40ad	28	A	!This program cannot be run in DOS mode.
+</span></span><span class=line><span class=cl>4128	05	A	Rich
+</span></span><span class=line><span class=cl>4240	05	A	.text
+</span></span><span class=line><span class=cl>4267	07	A	`.rdata
+</span></span><span class=line><span class=cl>428f	06	A	@.data
+</span></span><span class=line><span class=cl>50ed	05	A	Qh0@
+</span></span><span class=line><span class=cl>5134	05	A	Rh&lt;0@
+</span></span><span class=line><span class=cl>5159	05	A	QhD0@
+</span></span><span class=line><span class=cl>616a	14	A	GetWindowsDirectoryA
+</span></span><span class=line><span class=cl>6182	07	A	WinExec
+</span></span><span class=line><span class=cl>618c	0c	A	GetTempPathA
+</span></span><span class=line><span class=cl>619a	0c	A	KERNEL32.dll
+</span></span><span class=line><span class=cl>61aa	12	A	URLDownloadToFileA
+</span></span><span class=line><span class=cl>61be	0a	A	urlmon.dll
+</span></span><span class=line><span class=cl>61cc	09	A	_snprintf
+</span></span><span class=line><span class=cl>61d6	0a	A	MSVCRT.dll
+</span></span><span class=line><span class=cl>61e4	05	A	_exit
+</span></span><span class=line><span class=cl>61ec	0b	A	_XcptFilter
+</span></span><span class=line><span class=cl>6202	0d	A	__p___initenv
+</span></span><span class=line><span class=cl>6212	0d	A	__getmainargs
+</span></span><span class=line><span class=cl>6222	09	A	_initterm
+</span></span><span class=line><span class=cl>622e	10	A	__setusermatherr
+</span></span><span class=line><span class=cl>6242	0c	A	_adjust_fdiv
+</span></span><span class=line><span class=cl>6252	0c	A	__p__commode
+</span></span><span class=line><span class=cl>6262	0a	A	__p__fmode
+</span></span><span class=line><span class=cl>6270	0e	A	__set_app_type
+</span></span><span class=line><span class=cl>6282	10	A	_except_handler3
+</span></span><span class=line><span class=cl>6296	0a	A	_controlfp
+</span></span><span class=line><span class=cl>7070	0a	A	\winup.exe
+</span></span><span class=line><span class=cl>7084	16	A	\system32\wupdmgrd.exe
+</span></span><span class=line><span class=cl>70a4	33	A	http://www.practicalmalwareanalysis.com/updater.exe
+</span></span></code></pre></td></tr></table></div></div><h3 id=imports>Imports</h3><h4 id=kernel32dll>kernel32.dll</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>#	Thunk	Ordinal	Hint	Name
+</span></span><span class=line><span class=cl>0	000021ce		013e	GetProcAddress
+</span></span><span class=line><span class=cl>1	000021e0		01c2	LoadLibraryA
+</span></span><span class=line><span class=cl>2	000021f0		02d3	WinExec
+</span></span><span class=line><span class=cl>3	000021fa		02df	WriteFile
+</span></span><span class=line><span class=cl>4	00002206		0034	CreateFileA
+</span></span><span class=line><span class=cl>5	00002214		0295	SizeofResource
+</span></span><span class=line><span class=cl>6	000021b8		0046	CreateRemoteThread
+</span></span><span class=line><span class=cl>7	00002236		00a3	FindResourceA
+</span></span><span class=line><span class=cl>8	00002246		0126	GetModuleHandleA
+</span></span><span class=line><span class=cl>9	0000225a		017d	GetWindowsDirectoryA
+</span></span><span class=line><span class=cl>10	00002272		01dd	MoveFileA
+</span></span><span class=line><span class=cl>11	0000227e		0165	GetTempPathA
+</span></span><span class=line><span class=cl>12	000021a4		00f7	GetCurrentProcess
+</span></span><span class=line><span class=cl>13	00002196		01ef	OpenProcess
+</span></span><span class=line><span class=cl>14	00002188		001b	CloseHandle
+</span></span><span class=line><span class=cl>15	00002226		01c7	LoadResource
+</span></span></code></pre></td></tr></table></div></div><h4 id=advapidll>advapi.dll</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>#	Thunk	Ordinal	Hint	Name
+</span></span><span class=line><span class=cl>0	000022cc		0142	OpenProcessToken
+</span></span><span class=line><span class=cl>1	000022b4		00f5	LookupPrivilegeValueA
+</span></span><span class=line><span class=cl>2	0000229c		0017	AdjustTokenPrivileges
+</span></span></code></pre></td></tr></table></div></div><p>At first glance, the simple does not seem to be packed. The signature shown by <code>Detect it easy</code> identifies the sample as a 32-Bit Windows PE file.</p><p>So far so good.</p><p>We can already spot a lot of interesting stuff here.</p><p>The imports detected by are also quite interesting. We can see imports from <code>advapi.dll</code> which can be used to look up and adjust privileges on security token.
+We also can see imports from <code>kernel32.dll</code> for opening processes (<code>OpenProcess</code>), creating threads in other processes (<code>CreateRemoteThread</code>), writing (<code>WriteFile</code>) and moving (<code>MoveFileA</code>) files as well as functionality which can be used to obtain a handle to a resource in memory (<code>LoadResource</code>)</p><p>The extracted strings contain an URL, <code>http://www.practicalmalwareanalysis.com/updater.exe</code>, which looks like a link to another executable file.
+Also, there are two occurences the known string contained in the DOS header of Microsoft PE files, <code>!This program cannot be run in DOS mode.</code></p><p>Taking a closer look at the output of <code>Detect it easy</code> we can see that there is a resource contained in the binary which itself is a 32-bit PE file.
+This also explains the second occurences of known section names such as <code>.text</code>.</p><h2 id=extracting-the-resource>Extracting the resource</h2><p>The book mentions <a href=https://www.angusj.com/resourcehacker/ target=_blank rel="noopener noreffer">Resource Hacker</a> as a possible tool to be used to extract a resource, like icos, from binary files.
+As I did&rsquo;t install it yet, I decided to take a more archaic approach by opening the sample in a Hex Editor, search for the <code>.rscr</code> section of the file and locate the Magic Bytes <code>MZ</code> to see where the attached PE File started.
+After finding the location I just dumped all the bytes , beginning with <code>MZ</code>, to another file.</p><p>Loading the extracted file into <code>Detect it easy</code> shows us that this is indeed a 32-bit Windows PE file.</p><h3 id=hashes-1>Hashes</h3><ul><li>MD5 <code>ee5a2eaddb0050ea8d1c54a7811db9ab</code></li><li>SHA1 <code>8220bcd7f2850d55234bf633146d997c6d897688</code></li><li>SHA256 <code>bb1252dab9f573d7517083925db5fc6d8496afb56928cc848ad108c27542c448</code></li></ul><h3 id=imports-1>Imports</h3><h4 id=kernel32dll-1>kernel32.dll</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>#	Thunk	Ordinal	Hint	Name
+</span></span><span class=line><span class=cl>0	00002120		02d3	WinExec
+</span></span><span class=line><span class=cl>1	0000212a		0165	GetTempPathA
+</span></span><span class=line><span class=cl>2	00002108		017d	GetWindowsDirectoryA
+</span></span></code></pre></td></tr></table></div></div><h4 id=urlmondll>urlmon.dll</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>#	Thunk	Ordinal	Hint	Name
+</span></span><span class=line><span class=cl>0	00002148		003e	URLDownloadToFileA
+</span></span></code></pre></td></tr></table></div></div><h2 id=answers>Answers</h2><ol><li>There are existing signatures on VT. Most of them hint at a <code>Win32 Trojan/Download</code></li><li>There seem to be no indicators that the sample is packed. But <code>detect it easy</code> shows us that a Win32 PE File is attached as a resource to the sample. After extracting it we can see that according to PE bear it is an executable. This might obfuscate the full functionality of the sample to people only looking at the <code>.text</code> section of the sample.</li><li>The File Header for the actual sample <code>Lab01-04.exe</code> shows a compilation timestamp of <code>Friday, 30.08.2019 22:26:59 UTC</code>. The extracted resource shows a timestamp of <code>Sunday, 27.02.2011 00:16:59 UTC</code>.</li><li>The program&rsquo;s imports from <code>kernel32.dll</code> include functions for loading a executable file from memory with <code>LoadResource</code>, opening a process with <code>OpenProcess</code> as well as retrieving a handle to the current process with <code>GetCurrentProcess</code>. This could be used to run code attached to the resource section of the program. The sample also imports functionality for creating and moving Files on the system (<code>CreateFileA</code>, <code>MoveFileA</code>) which might be an indicator that the malware tries to persist itself on disk. Taking a look at the code extracted from the sample&rsquo;s resource we see that it uses <code>urlmon.dll</code> to import <code>URLDownloadToFileA</code>. This might be used to download the the <code>updater.exe</code> file from the URL found in the strings.</li><li>I found an URL in the extracted strings <code>http://www.practicalmalwareanalysis.com/updater.exe</code>, communication to this URL and the domain can be used to monitor the network for traffic to them</li><li>The extracted resource is a PE file itself, the extracted code contains imports from <code>urlmon.dll</code> which can be used to download a file from the internet (<code>URLDownloadToFileA</code>). The code also imports functions to retrieve the windows and temp directory as well as <code>WinExec</code>. It looks like the attached PE file from the resources is used to download a file and executing it on the system.</li></ol></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2023-11-09</span></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span><a href=javascript:void(0); title="Share on Twitter" data-sharer=twitter data-url=https://philmish.github.io/2023/11/chapter-one-lab-04/ data-title="Practical Malware Analysis Chapter 1 Lab 4" data-hashtags="Practical Malware Analysis,Writeup,Reverse Engineering,Learning"><i class="fab fa-twitter fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Facebook" data-sharer=facebook data-url=https://philmish.github.io/2023/11/chapter-one-lab-04/ data-hashtag="Practical Malware Analysis"><i class="fab fa-facebook-square fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Hacker News" data-sharer=hackernews data-url=https://philmish.github.io/2023/11/chapter-one-lab-04/ data-title="Practical Malware Analysis Chapter 1 Lab 4"><i class="fab fa-hacker-news fa-fw" aria-hidden=true></i></a><a href=javascript:void(0); title="Share on Line" data-sharer=line data-url=https://philmish.github.io/2023/11/chapter-one-lab-04/ data-title="Practical Malware Analysis Chapter 1 Lab 4"><i data-svg-src=https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg aria-hidden=true></i></a><a href=javascript:void(0); title="Share on 微博" data-sharer=weibo data-url=https://philmish.github.io/2023/11/chapter-one-lab-04/ data-title="Practical Malware Analysis Chapter 1 Lab 4" data-image=images/cover_prac_mal_ana.png><i class="fab fa-weibo fa-fw" aria-hidden=true></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw" aria-hidden=true></i>&nbsp;<a href=/tags/practical-malware-analysis/>Practical Malware Analysis</a>,&nbsp;<a href=/tags/writeup/>Writeup</a>,&nbsp;<a href=/tags/reverse-engineering/>Reverse Engineering</a>,&nbsp;<a href=/tags/learning/>Learning</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/2023/11/chapter-one-lab-03/ class=prev rel=prev title="Practical Malware Analysis Chapter 1 Lab 3"><i class="fas fa-angle-left fa-fw" aria-hidden=true></i>Practical Malware Analysis Chapter 1 Lab 3</a>
+<a href=/2023/11/intel86_assembly/ class=next rel=next title="Intel x86 Assembly Overview">Intel x86 Assembly Overview<i class="fas fa-angle-right fa-fw" aria-hidden=true></i></a></div></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line itemscope itemtype=http://schema.org/CreativeWork><i class="far fa-copyright fa-fw" aria-hidden=true></i><span itemprop=copyrightYear>2023</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://philmish.github.io/ target=_blank>philmish</a></span>&nbsp;|&nbsp;<span class=license><a rel="This is free and unencumbered software released into the public domain." href=https://unlicense.org target=_blank>The Unlicense</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw" aria-hidden=true></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw" aria-hidden=true></i></a></div><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/css/lightgallery-bundle.min.css><script type=text/javascript src=https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/algoliasearch@4.13.1/dist/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/lightgallery.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/thumbnail/lg-thumbnail.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/lightgallery@2.5.0/plugins/zoom/lg-zoom.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js></script><script type=text/javascript src=https://cdn.jsdelivr.net/npm/typeit@8.6.0/dist/index.umd.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{},data:{"id-1":"ls /usr/share","id-2":"ls /usr/share"},lightgallery:!0,search:{algoliaAppID:"",algoliaIndex:"",algoliaSearchKey:"",highlightTag:"em",maxResultLength:10,noResultsFound:"No results found",snippetLength:30,type:"algolia"},twemoji:!0,typeit:{cursorChar:"|",cursorSpeed:1e3,data:{"id-1":["id-1"],"id-2":["id-2"]},duration:-1,speed:100}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
