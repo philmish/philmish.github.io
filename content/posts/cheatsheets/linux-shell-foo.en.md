@@ -174,6 +174,22 @@ Set the address default gateway for a network interface to be used to send traff
 sudo route add default gw 192.68.10.1 eth0
 ```
 
+## tee
+
+If you want to redirect the output of a command in a sequence of commands connected by pipes you can use `tee` to redirect output to a file in between chained commands:
+
+```shell
+whois 10.10.10.1 | tee out.txt | grep "NetRange\|CIDR"
+```
+
+If you want to run `tee` as part of a loop and append to a file use the `-a` flag
+
+```shell
+for ip in $addrs
+do
+	whois "$ip" | tee -a out.txt | grep "NetRange\|CIDR"
+done
+```
 
 ## Keyboard Shortcuts
 
